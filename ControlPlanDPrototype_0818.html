@@ -1,0 +1,820 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI System Register &amp; Risk Classifier</title>
+<style>:root{
+  --ink:#000000;
+  --panel:#ffffff;
+  --panel-raised:#ffffff;
+  --hairline:#000000;
+  --text:#000000;
+  --text-dim:#000000;
+  --text-faint:#000000;
+  --amber:#e6915d;
+  --red:#e91d2a;
+  --teal:#b3bd95;
+  --blue:#9ab6c8;
+  --amber-bg:#e6915d;
+  --red-bg:#e91d2a;
+  --teal-bg:#b3bd95;
+  --blue-bg:#9ab6c8;
+  --mono:"Arial Black",Helvetica,Arial,sans-serif;
+  --sans:"Times New Roman",Times,serif;
+  --yellow:#fcc20f;
+  --purple:#6a26a4;
+  --link:#0000ee;
+  --tint-olive:#8e8a25;
+  --tint-lime:#c0d4a7;
+  --tint-steel:#a5b8c0;
+  --tint-periwinkle:#8c9ae0;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:#000;color:#000;font-family:var(--sans);}
+body{padding:8px;}
+#root{min-height:calc(100vh - 16px);background:#fff;color:#000;}
+.gate{min-height:calc(100vh - 16px);background:#fff;}
+.gate-wrap{max-width:920px;margin:0 auto;}
+
+/* top banner (Dell "BUILD YOUR OWN COMPUTER. ONLINE." strip) */
+.dell-banner{background:#000;color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+.dell-banner-text h1{font-family:var(--mono);font-size:20px;font-weight:900;margin:0;line-height:1.1;letter-spacing:-.3px;}
+.dell-banner-text p{font-family:Helvetica,Arial,sans-serif;font-size:11px;margin:5px 0 0;letter-spacing:.12em;text-transform:uppercase;color:#fff;}
+.dell-banner-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.dell-phone{background:#000;border:1px solid var(--red);color:var(--red);font-family:Helvetica,Arial,sans-serif;font-weight:700;font-size:15px;padding:6px 12px;white-space:nowrap;}
+.dell-sticker{background:var(--yellow);color:#000;border:1px solid #000;font-family:Helvetica,Arial,sans-serif;font-weight:700;font-size:11px;padding:6px 10px;text-transform:uppercase;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+.dell-sticker .stripe{background:var(--purple);color:#fff;padding:0 4px;}
+
+/* hero eyebrow block (Arial Black 36, flat tint) */
+.dell-eyebrow{background:var(--tint-olive);color:#000;padding:26px 20px;border-bottom:1px solid #000;}
+.dell-eyebrow h2{font-family:var(--mono);font-size:34px;font-weight:900;line-height:1.02;margin:0;}
+.dell-eyebrow p{font-family:var(--sans);font-size:14px;margin:12px 0 0;max-width:640px;line-height:1.4;}
+
+.gate-row{display:grid;grid-template-columns:1fr 1fr;gap:0;border-left:1px solid #000;}
+.gate-row .ribbon{border-right:1px solid #000;border-bottom:1px solid #000;}
+
+/* ribbon card: white title bar + flat tint body */
+.ribbon-title{background:#fff;color:#000;font-family:Helvetica,Arial,sans-serif;font-size:13px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:9px 16px;border-bottom:1px solid #000;}
+.ribbon-body{padding:16px;font-family:var(--sans);font-size:14px;line-height:1.5;}
+.ribbon-body ul{margin:0;padding-left:18px;}
+.ribbon-body li{margin-bottom:6px;}
+.ribbon-sage{background:var(--teal);}
+.ribbon-peach{background:var(--amber);}
+.ribbon-sky{background:var(--blue);}
+.ribbon-lime{background:var(--tint-lime);}
+
+.dell-tri{display:grid;grid-template-columns:repeat(3,1fr);border-left:1px solid #000;border-top:1px solid #000;}
+.dell-tri .ribbon{border-right:1px solid #000;border-bottom:1px solid #000;}
+
+/* red CTA block, one per page */
+.cta-block-red{background:var(--red);color:#fff;border:1px solid #000;border-top:none;padding:22px 20px;}
+.cta-block-red .cta-kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;}
+.gate-check{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid #000;border-radius:0;padding:14px 16px;margin:14px 0 18px;cursor:pointer;color:#000;}
+.gate-check input{margin-top:2px;width:16px;height:16px;flex:0 0 auto;}
+.gate-check span{font-size:12.5px;line-height:1.55;font-family:Helvetica,Arial,sans-serif;}
+.cta-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.cta-fine{font-family:var(--sans);font-size:12px;color:#fff;opacity:.9;}
+
+.cert-seal{width:64px;height:64px;border-radius:9999px;background:var(--red);color:#fff;border:2px solid #fff;display:flex;align-items:center;justify-content:center;text-align:center;font-family:Helvetica,Arial,sans-serif;font-weight:700;font-size:8px;line-height:1.2;letter-spacing:.02em;text-transform:uppercase;flex:0 0 auto;}
+
+.gate-footer{padding:16px 20px;border-top:1px solid #000;font-family:var(--sans);font-size:11px;color:#000;text-align:center;}
+.btn{font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;padding:12px 22px;border-radius:0;border:1px solid #000;cursor:pointer;background:#fff;color:#000;}
+.btn:disabled{opacity:.35;cursor:not-allowed;}
+.btn-primary{background:#000;color:#fff;}
+.btn-ghost{background:#fff;border:1px solid #000;color:#000;}
+.btn-sm{font-size:12px;padding:8px 14px;}
+.shell{max-width:760px;margin:0 auto;padding:24px 16px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;padding:12px 16px;background:#000;color:#fff;margin:-24px -16px 26px -16px;border-bottom:1px solid #000;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand-mark{width:34px;height:34px;border:1px solid #fff;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;}
+.brand-text h1{font-size:16px;margin:0;font-weight:900;font-family:var(--mono);}
+.brand-text p{font-size:11px;margin:2px 0 0;color:#fff;font-family:Helvetica,Arial,sans-serif;}
+.tabs{display:flex;gap:4px;background:#fff;border:1px solid #000;padding:4px;}
+.tab{font-family:Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.05em;text-transform:uppercase;padding:9px 16px;border-radius:0;cursor:pointer;color:#000;border:1px solid #000;background:#fff;}
+.tab.active{background:#e6915d;color:#000;}
+.footer-disclaimer{font-family:var(--sans);font-size:11px;color:#000;text-align:center;padding:26px 0 0;border-top:1px solid #000;margin-top:40px;}
+h2.section-title{font-size:14px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:#000;margin:0 0 16px;}
+.panel{background:#fff;border:1px solid #000;border-radius:0;padding:26px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field.full{grid-column:1/-1;}
+.field label{font-size:12px;color:#000;font-weight:700;font-family:Helvetica,Arial,sans-serif;}
+.field .hint{font-size:11px;color:#000;}
+input[type=text],textarea,select{background:#fff;border:1px solid #000;border-radius:0;color:#000;padding:10px 12px;font-size:14px;font-family:var(--sans);width:100%;}
+textarea{resize:vertical;min-height:64px;}
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.check-row{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:#000;background:#fff;border:1px solid #000;border-radius:0;padding:9px 11px;cursor:pointer;}
+.divider{height:1px;background:#000;margin:22px 0;}
+.form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px;}
+.empty{padding:60px 24px;text-align:center;color:#000;}
+.empty-icon{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:12px;flex-wrap:wrap;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#000;padding:0 12px 10px;font-weight:700;}
+td{padding:14px 12px;border-top:1px solid #000;font-size:14px;vertical-align:top;}
+tr.row{cursor:pointer;}
+tr.row:hover td{background:#f5f5f5;}
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:4px 9px;border:1px solid #000;border-radius:0;font-weight:700;white-space:nowrap;}
+.badge-dot{width:6px;height:6px;}
+.b-prohibited{background:#e91d2a;color:#fff;}
+.b-high{background:#e6915d;color:#000;}
+.b-limited{background:#9ab6c8;color:#000;}
+.b-minimal{background:#b3bd95;color:#000;}
+.muted{color:#000;font-size:12px;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;justify-content:flex-end;z-index:50;}
+.drawer{width:min(520px,100%);background:#fff;border-left:1px solid #000;height:100%;overflow-y:auto;padding:28px;}
+.drawer-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.drawer-title{font-size:18px;font-weight:900;margin:0;font-family:var(--mono);}
+.close-x{background:none;border:none;color:#000;font-size:20px;cursor:pointer;}
+.dial-wrap{display:flex;justify-content:center;margin:20px 0 6px;}
+.counsel-note,.flag-note,.info-note{margin-top:10px;border:1px solid #000;padding:12px 14px;font-size:12px;line-height:1.4;}
+.counsel-note{background:#e91d2a;color:#fff;}
+.flag-note{background:#e6915d;color:#000;}
+.info-note{background:#9ab6c8;color:#000;}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:8px 12px;font-size:13px;margin:18px 0;}
+.kv dt{color:#000;font-family:Helvetica,Arial,sans-serif;}
+.kv dd{margin:0;color:#000;}
+.artifact-list{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;}
+.artifact-list li{font-size:13px;color:#000;padding:9px 12px;background:#fff;border:1px solid #000;display:flex;gap:9px;align-items:flex-start;}
+.drawer-actions{display:flex;gap:10px;margin-top:24px;}
+.danger-btn{background:#fff;color:#e91d2a;border:1px solid #e91d2a;}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.stat-card{background:#fff;border:1px solid #000;padding:18px;}
+.stat-num{font-family:var(--mono);font-size:28px;font-weight:900;}
+.stat-label{font-size:11px;margin-top:4px;font-family:Helvetica,Arial,sans-serif;text-transform:uppercase;}
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{display:grid;grid-template-columns:120px 20px 1fr;gap:0 14px;padding:14px 0;border-top:1px solid #000;}
+.tl-date{font-family:Helvetica,Arial,sans-serif;font-size:11px;color:#e6915d;}
+.tl-dot{width:8px;height:8px;background:#000;margin-top:6px;}
+.tl-body h4{margin:0 0 4px;font-size:14px;font-weight:900;font-family:var(--mono);}
+.tl-body p{margin:0;font-size:13px;line-height:1.4;}
+.attn-list{display:flex;flex-direction:column;gap:8px;}
+.attn-row{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid #000;padding:11px 14px;font-size:13px;cursor:pointer;}
+.two-col{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;}
+@media(max-width:840px){.form-grid{grid-template-columns:1fr;}.check-grid{grid-template-columns:1fr;}.stat-grid{grid-template-columns:1fr 1fr;}.two-col{grid-template-columns:1fr;}.shell{max-width:100%;}}</style>
+<style id="claude-override">
+:root{
+  --ink:#141413;
+  --panel:#faf9f5;
+  --panel-raised:#efe9de;
+  --hairline:#e6dfd8;
+  --text:#141413;
+  --text-dim:#3d3d3a;
+  --text-faint:#6c6a64;
+  --amber:#cc785c;
+  --red:#cc785c;
+  --teal:#181715;
+  --blue:#181715;
+  --amber-bg:#cc785c;
+  --red-bg:#cc785c;
+  --teal-bg:#efe9de;
+  --blue-bg:#efe9de;
+  --mono:"Georgia", serif;
+  --sans:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --yellow:#e8a55a;
+  --purple:#181715;
+  --link:#cc785c;
+  --tint-olive:#e8e0d2;
+  --tint-lime:#f5f0e8;
+  --tint-steel:#e6dfd8;
+  --tint-periwinkle:#e6dfd8;
+}
+html,body{background:#faf9f5;color:#141413;font-family:var(--sans);}
+#root{background:#faf9f5;color:#141413;}
+.gate{background:#faf9f5;}
+.dell-banner{background:#181715;color:#faf9f5;}
+.dell-banner-text h1{font-family:var(--mono);font-size:32px;}
+.dell-eyebrow{background:#e8e0d2;border-bottom:1px solid #e6dfd8;}
+.dell-eyebrow h2{font-family:var(--mono);font-size:36px;font-weight:400;}
+.ribbon-title{background:#faf9f5;border-bottom:1px solid #e6dfd8;color:#141413;}
+.ribbon-body{font-family:var(--sans);color:#3d3d3a;}
+.ribbon-sage{background:#efe9de;}
+.ribbon-peach{background:#e8e0d2;}
+.ribbon-sky{background:#f5f0e8;}
+.ribbon-lime{background:#f5f0e8;}
+.cta-block-red{background:#cc785c;color:#fff;border:1px solid #cc785c;}
+.btn-primary{background:#cc785c;color:#fff;border-color:#cc785c;}
+.btn-primary:hover{background:#a9583e;}
+.tab.active{background:#cc785c;color:#fff;}
+.topbar{background:#181715;color:#faf9f5;border-bottom:1px solid #252320;}
+.panel{background:#fff;border:1px solid #e6dfd8;}
+input[type=text],textarea,select{background:#faf9f5;border:1px solid #e6dfd8;color:#141413;}
+.check-row{background:#faf9f5;border:1px solid #e6dfd8;color:#141413;}
+.badge{border:1px solid #e6dfd8;}
+.b-prohibited{background:#cc785c;color:#fff;border-color:#cc785c;}
+.b-high{background:#cc785c;color:#fff;border-color:#cc785c;}
+.b-limited{background:#5db8a6;color:#141413;border-color:#e6dfd8;}
+.b-minimal{background:#efe9de;color:#141413;border-color:#e6dfd8;}
+.drawer{background:#fff;border-left:1px solid #e6dfd8;}
+.counsel-note{background:#cc785c;color:#fff;border-color:#cc785c;}
+.flag-note{background:#e8a55a;color:#141413;border-color:#e6dfd8;}
+.info-note{background:#efe9de;color:#141413;border-color:#e6dfd8;}
+.stat-card{background:#fff;border:1px solid #e6dfd8;}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+(function(){
+if (!window.storage) {
+  window.storage = {
+    get: function(key){ try { return Promise.resolve({value: localStorage.getItem(key)}); } catch(e){ return Promise.resolve({value:null}); } },
+    set: function(key,value){ try { localStorage.setItem(key,value); } catch(e){} return Promise.resolve(); }
+  };
+}
+
+var STORAGE_KEY_ACK = 'ai-act-tool:acknowledged';
+var STORAGE_KEY_SYSTEMS = 'ai-act-tool:systems';
+
+var state = {
+  loading: true,
+  acknowledged: false,
+  ackChecked: false,
+  systems: [],
+  tab: 'register', // register | add | dashboard
+  openId: null,
+  landingSeen: false
+};
+
+/* ---------------- Reference data ---------------- */
+
+var PROHIBITED_ITEMS = [
+  {k:'subliminal', label:'Uses subliminal, manipulative or deceptive techniques to materially distort behavior and cause harm'},
+  {k:'vulnerability', label:'Exploits vulnerabilities of a specific group (age, disability, socio-economic situation)'},
+  {k:'social-scoring', label:'Performs social scoring leading to detrimental or unfavorable treatment'},
+  {k:'biometric-realtime', label:'Real-time remote biometric identification in publicly accessible spaces for law enforcement'},
+  {k:'biometric-categorization', label:'Biometric categorization inferring race, political opinion, religion, or sexual orientation'},
+  {k:'emotion-inference', label:'Infers emotions in the workplace or education settings (non-medical/safety use)'},
+  {k:'facial-scraping', label:'Untargeted scraping of facial images to build/expand a recognition database'},
+  {k:'predictive-policing', label:'Predictive policing based solely on profiling of a person'}
+];
+
+var ANNEX_III_CATEGORIES = [
+  {v:'none', label:'None of these apply'},
+  {v:'biometric', label:'Biometric identification / categorization'},
+  {v:'critical-infra', label:'Management or operation of critical infrastructure'},
+  {v:'education', label:'Education or vocational training (admissions, exam scoring)'},
+  {v:'employment', label:'Employment, HR, worker management (recruiting, promotion, task allocation, monitoring, termination)'},
+  {v:'essential-services', label:'Access to essential private/public services (credit scoring, insurance pricing, benefits eligibility, emergency dispatch)'},
+  {v:'law-enforcement', label:'Law enforcement'},
+  {v:'migration', label:'Migration, asylum, or border control management'},
+  {v:'justice', label:'Administration of justice or democratic processes'}
+];
+
+var TRANSPARENCY_ITEMS = [
+  {k:'chatbot', label:'Interacts directly with people (e.g. chatbot, virtual assistant)'},
+  {k:'synthetic', label:'Generates or manipulates synthetic audio, image, video, or text content'},
+  {k:'emotion-nonprohibited', label:'Performs emotion recognition or biometric categorization outside a prohibited use above'}
+];
+
+var SECTOR_OPTIONS = [
+  {v:'other', label:'Other / general business'},
+  {v:'employment', label:'Employment / HR'},
+  {v:'healthcare', label:'Healthcare'},
+  {v:'financial', label:'Financial services / credit / insurance'},
+  {v:'law-enforcement', label:'Law enforcement / public safety'},
+  {v:'education', label:'Education'},
+  {v:'public-sector', label:'Public sector / government'}
+];
+
+var ROLE_OPTIONS = ['Provider','Deployer','Distributor','Importer'];
+var MARKET_OPTIONS = [
+  {v:'eu-established', label:'Company is established in the EU'},
+  {v:'sells-into-eu', label:'Not EU-based, but sells/offers this system into the EU market'},
+  {v:'no-eu', label:'No identified EU exposure'}
+];
+var DEPLOYER_TYPE_OPTIONS = [
+  {v:'none', label:'None of these'},
+  {v:'public-body', label:'Body governed by public law'},
+  {v:'credit', label:'Bank / credit provider'},
+  {v:'insurance', label:'Insurance provider'},
+  {v:'essential-services', label:'Provider of essential public services'}
+];
+
+var TIER_META = {
+  'prohibited': {label:'Prohibited', badge:'b-prohibited', dial:3, color:'var(--red)',
+    priority:'Critical — already enforced', deadline:'In force since 2 Feb 2025'},
+  'high-annex1': {label:'High-Risk · Annex I', badge:'b-high', dial:2, color:'var(--amber)',
+    priority:'High priority', deadline:'2 Aug 2028 (embedded in a regulated product)'},
+  'high-annex3': {label:'High-Risk · Annex III', badge:'b-high', dial:2, color:'var(--amber)',
+    priority:'High priority', deadline:'2 Dec 2027 (per Digital Omnibus deferral)'},
+  'limited': {label:'Limited Risk', badge:'b-limited', dial:1, color:'var(--blue)',
+    priority:'Medium priority', deadline:'Art. 50 transparency in force now; watermarking transition to 2 Dec 2026 for pre-existing systems'},
+  'minimal': {label:'Minimal Risk', badge:'b-minimal', dial:0, color:'var(--teal)',
+    priority:'Low — monitor', deadline:'No mandatory AI Act obligations identified'}
+};
+
+function baseArtifacts(tier){
+  var common = ['AI literacy training record for staff who build, deploy, or oversee this system'];
+  if(tier==='prohibited'){
+    return ['Prohibited-use screening record (this classification)','Immediate use-discontinuation or remediation plan','Legal review memo confirming prohibited status'].concat(common);
+  }
+  if(tier==='high-annex1' || tier==='high-annex3'){
+    return [
+      'AI System Inventory entry (this record)',
+      'Risk Management System documentation (Art. 9)',
+      'Data Governance Protocol (Art. 10)',
+      'Technical Documentation File — Annex IV (Art. 11)',
+      'Automated Logging System (Art. 12)',
+      'Instructions for Use / System Card (Art. 13)',
+      'Human Oversight Protocol with named reviewer (Art. 14)',
+      'Testing, Accuracy & Cybersecurity Validation Report (Art. 15)',
+      'Deployer Due-Diligence Checklist (Art. 26, if acting as deployer)'
+    ].concat(common);
+  }
+  if(tier==='limited'){
+    return ['Disclosure / transparency template (Art. 50)','Content provenance or watermarking process for synthetic output'].concat(common);
+  }
+  return ['Retain in inventory; re-review at next periodic cycle (12 months recommended)'].concat(common);
+}
+
+/* ---------------- Classification engine ---------------- */
+
+function classify(sys){
+  var prohibited = sys.prohibitedFlags.length > 0;
+  var annex = sys.annexCategory !== 'none';
+  var transparency = sys.transparencyFlags.length > 0;
+
+  var tier;
+  if(prohibited){ tier = 'prohibited'; }
+  else if(annex){ tier = sys.embeddedRegulated ? 'high-annex1' : 'high-annex3'; }
+  else if(transparency){ tier = 'limited'; }
+  else{ tier = 'minimal'; }
+
+  var meta = TIER_META[tier];
+  var artifacts = baseArtifacts(tier);
+
+  var friaFlag = (tier==='high-annex1'||tier==='high-annex3') &&
+    ['public-body','credit','insurance','essential-services'].indexOf(sys.deployerType) !== -1;
+
+  var sectorFlag = ['employment','healthcare','financial','law-enforcement','public-sector'].indexOf(sys.sector) !== -1;
+
+  var counselFlag = tier==='prohibited' || tier==='high-annex1' || tier==='high-annex3';
+
+  var marketNote = null;
+  if(sys.marketExposure === 'no-eu'){
+    marketNote = 'No direct EU exposure identified — this classification is retained for reference. Confirm there is no indirect EU nexus (EU customers, EU data subjects, or an EU establishment) before deprioritizing.';
+  }
+
+  return {tier:tier, meta:meta, artifacts:artifacts, friaFlag:friaFlag, sectorFlag:sectorFlag, counselFlag:counselFlag, marketNote:marketNote};
+}
+
+/* ---------------- Storage ---------------- */
+
+function loadAll(){
+  Promise.all([
+    window.storage.get(STORAGE_KEY_ACK, false).catch(function(){return null;}),
+    window.storage.get(STORAGE_KEY_SYSTEMS, false).catch(function(){return null;})
+  ]).then(function(results){
+    var ackRes = results[0];
+    var sysRes = results[1];
+    state.acknowledged = !!(ackRes && ackRes.value === 'true');
+    try{
+      state.systems = sysRes && sysRes.value ? JSON.parse(sysRes.value) : [];
+    }catch(e){ state.systems = []; }
+    state.loading = false;
+    render();
+  }).catch(function(){
+    state.loading = false;
+    render();
+  });
+}
+
+function persistSystems(){
+  window.storage.set(STORAGE_KEY_SYSTEMS, JSON.stringify(state.systems), false).catch(function(err){
+    console.error('Storage error', err);
+  });
+}
+
+function acknowledge(){
+  state.acknowledged = true;
+  window.storage.set(STORAGE_KEY_ACK, 'true', false).catch(function(err){ console.error(err); });
+  state.tab = 'register';
+  render();
+}
+
+/* ---------------- Rendering ---------------- */
+
+function esc(s){
+  var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML;
+}
+
+function render(){
+  var root = document.getElementById('root');
+  if(state.loading){
+    root.innerHTML = '<div class="gate"><div class="dell-banner"><div class="dell-banner-text"><h1>AI SYSTEM REGISTER &amp; RISK CLASSIFIER.</h1><p>Preparing your register…</p></div></div></div>';
+    return;
+  }
+  if(!state.acknowledged){
+    root.innerHTML = gateScreen();
+    var cb = document.getElementById('ack-cb');
+    var btn = document.getElementById('ack-btn');
+    cb.addEventListener('change', function(){
+      state.ackChecked = cb.checked;
+      btn.disabled = !cb.checked;
+    });
+    btn.addEventListener('click', function(){ if(state.ackChecked) acknowledge(); });
+    return;
+  }
+  root.innerHTML = appScreen();
+  wireApp();
+}
+
+function gateScreen(){
+  return ''+
+  '<div class="gate"><div class="gate-wrap">'+
+
+    '<div class="dell-banner">'+
+      '<div class="dell-banner-text">'+
+        '<h1>AI SYSTEM REGISTER &amp; RISK CLASSIFIER.</h1>'+
+        '<p>Sort your AI systems by EU AI Act risk tier. Online.</p>'+
+      '</div>'+
+      '<div class="dell-banner-right">'+
+        '<div class="dell-sticker">FREE<span class="stripe">to</span>USE</div>'+
+        '<div class="dell-phone">EU AI ACT · 2026</div>'+
+      '</div>'+
+    '</div>'+
+
+    '<div class="dell-eyebrow">'+
+      '<h2>KNOW YOUR TIER<br>BEFORE THE REGULATOR DOES.</h2>'+
+      '<p>Answer a few questions about a system and get a classification against the EU AI Act — Prohibited, High-Risk, Limited or Minimal — plus the artifacts a compliance file typically needs.</p>'+
+    '</div>'+
+
+    '<div class="gate-row">'+
+      '<div class="ribbon ribbon-peach">'+
+        '<div class="ribbon-title">What this tool does</div>'+
+        '<div class="ribbon-body"><ul>'+
+          '<li>Walks through Art. 5 prohibited practices, Annex III high-risk categories, and Art. 50 transparency triggers</li>'+
+          '<li>Classifies each system into a risk tier with a priority and deadline</li>'+
+          '<li>Builds a running register you can export to CSV</li>'+
+          '<li>Lists the artifacts a compliance file for that tier typically needs</li>'+
+        '</ul></div>'+
+      '</div>'+
+      '<div class="ribbon ribbon-sage">'+
+        '<div class="ribbon-title">What it isn\'t</div>'+
+        '<div class="ribbon-body"><ul>'+
+          '<li>Not a legal opinion, and not a substitute for counsel</li>'+
+          '<li>Doesn\'t review your specific facts the way a lawyer would</li>'+
+          '<li>Can\'t account for every jurisdiction- or sector-specific rule</li>'+
+          '<li><strong>High-risk and prohibited results must be confirmed by qualified EU AI Act counsel</strong></li>'+
+        '</ul></div>'+
+      '</div>'+
+    '</div>'+
+
+    '<div class="dell-tri">'+
+      '<div class="ribbon ribbon-sky"><div class="ribbon-title">Prohibited practices</div><div class="ribbon-body">In force since 2 Feb 2025 — already a live compliance issue, not a future one.</div></div>'+
+      '<div class="ribbon ribbon-lime"><div class="ribbon-title">High-risk · Annex III</div><div class="ribbon-body">Deadline 2 Dec 2027, per the Digital Omnibus deferral.</div></div>'+
+      '<div class="ribbon ribbon-peach"><div class="ribbon-title">High-risk · Annex I</div><div class="ribbon-body">Deadline 2 Aug 2028 for AI embedded in a regulated product.</div></div>'+
+    '</div>'+
+
+    '<div class="cta-block-red">'+
+      '<div class="cta-kicker">Before you enter</div>'+
+      '<div style="font-family:var(--sans);font-size:14px;line-height:1.5;max-width:680px;">This tool gives you AI-generated informational guidance, not a legal opinion. Every high-risk or prohibited classification should be confirmed by qualified EU AI Act counsel before you rely on it or present it to a client.</div>'+
+      '<label class="gate-check" for="ack-cb">'+
+        '<input type="checkbox" id="ack-cb">'+
+        '<span>I understand this tool provides AI-generated informational guidance only — not legal advice — and that classifications must be confirmed by qualified counsel before being relied upon or delivered as final to a client.</span>'+
+      '</label>'+
+      '<div class="cta-actions">'+
+        '<button class="btn btn-primary" id="ack-btn" disabled>Enter the register</button>'+
+        '<span class="cert-seal">EU AI ACT<br>WORKING<br>COPY</span>'+
+        '<span class="cta-fine">No account needed. Your register is stored for you only.</span>'+
+      '</div>'+
+    '</div>'+
+
+    '<div class="gate-footer">AI-generated informational guidance, not legal advice. Not affiliated with the European Commission.</div>'+
+
+  '</div></div>';
+}
+
+function appScreen(){
+  var tabs = ['register','add','dashboard'];
+  var labels = {register:'Register', add:'Add System', dashboard:'Dashboard'};
+  var tabsHtml = tabs.map(function(t){
+    return '<button class="tab '+(state.tab===t?'active':'')+'" data-tab="'+t+'">'+labels[t]+'</button>';
+  }).join('');
+
+  var body = '';
+  if(state.tab==='add') body = addForm();
+  else if(state.tab==='dashboard') body = dashboard();
+  else body = registerView();
+
+  var drawer = state.openId ? detailDrawer(state.systems.find(function(s){return s.id===state.openId;})) : '';
+
+  return ''+
+  '<div class="shell">'+
+    '<div class="topbar">'+
+      '<div class="brand" id="brand-home-link" style="cursor:pointer;" title="Back to landing page">'+
+        '<div class="brand-mark">AI</div>'+
+        '<div class="brand-text"><h1>System Register &amp; Risk Classifier</h1><p>EU AI ACT · WORKING COPY</p></div>'+
+      '</div>'+
+      '<div class="tabs">'+tabsHtml+'</div>'+
+      '<button class="btn btn-ghost btn-sm" id="back-to-landing" style="background:transparent;border-color:#fff;color:#fff;">&larr; Landing page</button>'+
+    '</div>'+
+    body+
+  '</div>'+
+  '<div class="footer-disclaimer">AI-generated informational guidance, not legal advice. Regulatory dates shown reflect the Digital Omnibus deferral (Council approval 29 June 2026) — confirm Official Journal publication and current status before citing as settled law. High-risk and prohibited classifications require confirmation by qualified EU AI Act counsel.</div>'+
+  drawer;
+}
+
+function registerView(){
+  if(state.systems.length===0){
+    return '<div class="panel"><div class="empty"><div class="empty-icon">Register is empty</div><div>No AI systems logged yet. Add your first system to generate a classification.</div><div style="margin-top:16px;"><button class="btn btn-primary btn-sm" id="empty-add-btn">+ Add a system</button></div></div></div>';
+  }
+  var rows = state.systems.slice().sort(function(a,b){return b.createdAt-a.createdAt;}).map(function(s){
+    var c = classify(s);
+    return '<tr class="row" data-id="'+s.id+'">'+
+      '<td><strong>'+esc(s.name)+'</strong><div class="muted">'+esc(s.owner||'—')+'</div></td>'+
+      '<td>'+roleAndMarketLabel(s)+'</td>'+
+      '<td><span class="badge '+c.meta.badge+'"><span class="badge-dot"></span>'+c.meta.label+'</span></td>'+
+      '<td class="muted">'+c.meta.deadline+'</td>'+
+    '</tr>';
+  }).join('');
+
+  return ''+
+  '<div class="toolbar"><h2 class="section-title" style="margin:0;">Logged systems ('+state.systems.length+')</h2>'+
+    '<div style="display:flex;gap:8px;">'+
+      '<button class="btn btn-ghost btn-sm" id="export-btn">Export CSV</button>'+
+      '<button class="btn btn-primary btn-sm" id="reg-add-btn">+ Add a system</button>'+
+    '</div>'+
+  '</div>'+
+  '<div class="panel" style="padding:8px 18px 18px;">'+
+    '<table><thead><tr><th>System</th><th>Role / Market</th><th>Classification</th><th>Deadline</th></tr></thead>'+
+    '<tbody>'+rows+'</tbody></table>'+
+  '</div>';
+}
+
+function roleAndMarketLabel(s){
+  var m = MARKET_OPTIONS.find(function(o){return o.v===s.marketExposure;});
+  return '<div>'+esc(s.role)+'</div><div class="muted">'+(m?esc(m.label.replace('Not EU-based, but sells/offers this system into the EU market','Sells into EU').replace('Company is established in the EU','EU-established').replace('No identified EU exposure','No EU exposure')):'—')+'</div>';
+}
+
+function addForm(){
+  var prohibitedHtml = PROHIBITED_ITEMS.map(function(p){
+    return '<label class="check-row"><input type="checkbox" name="prohibited" value="'+p.k+'">'+p.label+'</label>';
+  }).join('');
+  var transparencyHtml = TRANSPARENCY_ITEMS.map(function(p){
+    return '<label class="check-row"><input type="checkbox" name="transparency" value="'+p.k+'">'+p.label+'</label>';
+  }).join('');
+  var annexOptions = ANNEX_III_CATEGORIES.map(function(a){return '<option value="'+a.v+'">'+a.label+'</option>';}).join('');
+  var roleOptions = ROLE_OPTIONS.map(function(r){return '<option value="'+r+'">'+r+'</option>';}).join('');
+  var marketOptions = MARKET_OPTIONS.map(function(m){return '<option value="'+m.v+'">'+m.label+'</option>';}).join('');
+  var sectorOptions = SECTOR_OPTIONS.map(function(s){return '<option value="'+s.v+'">'+s.label+'</option>';}).join('');
+  var deployerTypeOptions = DEPLOYER_TYPE_OPTIONS.map(function(d){return '<option value="'+d.v+'">'+d.label+'</option>';}).join('');
+
+  return ''+
+  '<h2 class="section-title">Add an AI system</h2>'+
+  '<div class="panel">'+
+    '<form id="system-form">'+
+      '<div class="form-grid">'+
+        '<div class="field full"><label>System name</label><input type="text" name="name" required placeholder="e.g. Resume screening model"></div>'+
+        '<div class="field"><label>Owner / department</label><input type="text" name="owner" placeholder="e.g. Talent Acquisition"></div>'+
+        '<div class="field"><label>Your role for this system</label><select name="role">'+roleOptions+'</select></div>'+
+        '<div class="field full"><label>Short description</label><textarea name="description" placeholder="What does this system do, and what decision or output does it produce?"></textarea></div>'+
+        '<div class="field"><label>Market exposure</label><select name="marketExposure">'+marketOptions+'</select><div class="hint">Adjusts urgency, not the underlying classification.</div></div>'+
+        '<div class="field"><label>Sector</label><select name="sector">'+sectorOptions+'</select></div>'+
+        '<div class="field full"><label>Is this AI embedded as a safety component of a regulated product (e.g. medical device, machinery, vehicle)?</label>'+
+          '<select name="embeddedRegulated"><option value="no">No — it is a standalone system</option><option value="yes">Yes — embedded in a regulated product (Annex I)</option></select></div>'+
+        '<div class="field full"><label>Control Design</label>'+
+          '<select name="controlDesign"><option value="none">1) None</option><option value="manual">2) Manual Controls (Human-Driven)</option><option value="system-output-review">3) System Output Report Review</option><option value="automated-human-in-loop">4) Automated with Human-in-the-Loop</option><option value="fully-automated">5) Fully Automated System (No Human Touch)</option><option value="continuous-monitoring">6) Continuous Monitoring / Embedded Analytics (Real-Time)</option><option value="hybrid">7) Hybrid of Options 2-6</option></select></div>'+
+      '</div>'+
+
+      '<div class="divider"></div>'+
+      '<h3 style="font-size:13px;margin:0 0 12px;">Does this system do any of the following? (Art. 5 — prohibited practices)</h3>'+
+      '<div class="check-grid">'+prohibitedHtml+'</div>'+
+
+      '<div class="divider"></div>'+
+      '<div class="field full"><label>Which Annex III high-risk category applies, if any?</label><select name="annexCategory">'+annexOptions+'</select></div>'+
+
+      '<div class="divider"></div>'+
+      '<h3 style="font-size:13px;margin:0 0 12px;">Transparency triggers</h3>'+
+      '<div class="check-grid">'+transparencyHtml+'</div>'+
+
+      '<div class="divider"></div>'+
+      '<div class="field full"><label>If high-risk: what type of deployer are you? (for FRIA screening, Art. 27)</label><select name="deployerType">'+deployerTypeOptions+'</select></div>'+
+
+      '<div class="form-actions">'+
+        '<button type="button" class="btn btn-ghost" id="cancel-add">Cancel</button>'+
+        '<button type="submit" class="btn btn-primary">Classify &amp; save to register</button>'+
+      '</div>'+
+    '</form>'+
+  '</div>';
+}
+
+function dial(tierLevel, color){
+  // semicircular gauge, 0..3 across 4 segments
+  var segColors = ['var(--teal)','var(--blue)','var(--amber)','var(--red)'];
+  var cx=90, cy=90, r=70;
+  function arcPath(startAngle, endAngle){
+    var toRad = function(a){return (Math.PI/180)*a;};
+    var x1 = cx + r*Math.cos(toRad(startAngle));
+    var y1 = cy + r*Math.sin(toRad(startAngle));
+    var x2 = cx + r*Math.cos(toRad(endAngle));
+    var y2 = cy + r*Math.sin(toRad(endAngle));
+    return 'M '+x1+' '+y1+' A '+r+' '+r+' 0 0 1 '+x2+' '+y2;
+  }
+  var segs = '';
+  for(var i=0;i<4;i++){
+    var start = 180 + i*45;
+    var end = 180 + (i+1)*45;
+    var isActive = i===tierLevel;
+    segs += '<path d="'+arcPath(start,end)+'" stroke="'+segColors[i]+'" stroke-width="'+(isActive?14:9)+'" fill="none" opacity="'+(isActive?1:0.28)+'" stroke-linecap="round"/>';
+  }
+  var needleAngle = 180 + (tierLevel*45 + 22.5);
+  var rad = (Math.PI/180)*needleAngle;
+  var nx = cx + (r-18)*Math.cos(rad);
+  var ny = cy + (r-18)*Math.sin(rad);
+  return '<svg width="180" height="110" viewBox="0 0 180 110">'+segs+
+    '<line x1="'+cx+'" y1="'+cy+'" x2="'+nx+'" y2="'+ny+'" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round"/>'+
+    '<circle cx="'+cx+'" cy="'+cy+'" r="4.5" fill="'+color+'"/>'+
+  '</svg>';
+}
+
+function detailDrawer(sys){
+  if(!sys) return '';
+  var c = classify(sys);
+  var artifactsHtml = c.artifacts.map(function(a){return '<li>'+esc(a)+'</li>';}).join('');
+
+  var counsel = c.counselFlag ? '<div class="counsel-note">⚠ Confirm this classification with qualified EU AI Act counsel before relying on it or presenting it as final to a client.</div>' : '';
+  var fria = c.friaFlag ? '<div class="flag-note">⚠ Fundamental Rights Impact Assessment (Art. 27) is likely required given this deployer type — narrower than a DPIA. Confirm exact scope with counsel.</div>' : '';
+  var sector = c.sectorFlag ? '<div class="info-note">ℹ Check for sector-specific implementing guidance beyond the base Act (national regulators have issued additional rules for several sectors, including employment).</div>' : '';
+  var market = c.marketNote ? '<div class="info-note">ℹ '+esc(c.marketNote)+'</div>' : '';
+
+  return ''+
+  '<div class="overlay" id="drawer-overlay">'+
+    '<div class="drawer">'+
+      '<div class="drawer-head"><h3 class="drawer-title">'+esc(sys.name)+'</h3><button class="close-x" id="close-drawer">Ã—</button></div>'+
+      '<div class="muted">'+esc(sys.owner||'No owner set')+'</div>'+
+      '<div class="dial-wrap">'+dial(c.meta.dial, c.meta.color)+'</div>'+
+      '<div style="text-align:center;"><span class="badge '+c.meta.badge+'"><span class="badge-dot"></span>'+c.meta.label+'</span></div>'+
+      counsel + fria + sector + market +
+      '<dl class="kv">'+
+        '<dt>Priority</dt><dd>'+c.meta.priority+'</dd>'+
+        '<dt>Deadline</dt><dd>'+c.meta.deadline+'</dd>'+
+        '<dt>Role</dt><dd>'+esc(sys.role)+'</dd>'+
+        '<dt>Sector</dt><dd>'+esc((SECTOR_OPTIONS.find(function(o){return o.v===sys.sector;})||{}).label||'—')+'</dd>'+
+      '</dl>'+
+      (sys.description ? '<div style="font-size:12.5px;color:var(--text-dim);line-height:1.6;margin-bottom:6px;">'+esc(sys.description)+'</div>' : '')+
+      '<h2 class="section-title" style="margin-top:20px;">Recommended artifacts to build</h2>'+
+      '<ul class="artifact-list">'+artifactsHtml+'</ul>'+
+      '<div class="drawer-actions">'+
+        '<button class="btn btn-ghost btn-sm" id="close-drawer-2">Close</button>'+
+        '<button class="btn danger-btn btn-sm" id="delete-sys" data-id="'+sys.id+'">Remove from register</button>'+
+      '</div>'+
+    '</div>'+
+  '</div>';
+}
+
+function dashboard(){
+  var counts = {prohibited:0,'high-annex1':0,'high-annex3':0,limited:0,minimal:0};
+  var attnItems = [];
+  state.systems.forEach(function(s){
+    var c = classify(s);
+    counts[c.tier] = (counts[c.tier]||0)+1;
+    if(c.tier==='prohibited'||c.tier==='high-annex1'||c.tier==='high-annex3'){
+      attnItems.push({sys:s, c:c});
+    }
+  });
+  var highCount = counts['high-annex1']+counts['high-annex3'];
+  var totalSystems = state.systems.length;
+  var withControls = state.systems.filter(function(s){ return s.controlDesign && s.controlDesign !== 'none'; }).length;
+  var controlsPct = totalSystems ? Math.round(withControls/totalSystems*100) : 0;
+
+  var attnHtml = attnItems.length ? attnItems.map(function(item){
+    return '<div class="attn-row" data-id="'+item.sys.id+'"><span>'+esc(item.sys.name)+'</span><span class="badge '+item.c.meta.badge+'"><span class="badge-dot"></span>'+item.c.meta.label+'</span></div>';
+  }).join('') : '<div class="muted" style="padding:8px 0;">No high-risk or prohibited systems logged.</div>';
+
+  var timeline = [
+    {date:'2 Feb 2025', title:'Prohibited practices + AI literacy', body:'In force. Any prohibited-use match above is an active compliance issue, not a future one.'},
+    {date:'2 Aug 2025', title:'GPAI obligations', body:'In force for providers of general-purpose AI models.'},
+    {date:'2 Dec 2026', title:'Watermarking transition ends', body:'Art. 50(2) content-provenance obligations apply to systems already on the market at 2 Aug 2026.'},
+    {date:'2 Dec 2027', title:'High-risk · Annex III', body:'Standalone high-risk systems (hiring, credit, biometric ID, etc.) — deferred from 2 Aug 2026 via the Digital Omnibus.'},
+    {date:'2 Aug 2028', title:'High-risk · Annex I', body:'AI embedded as a safety component in an already-regulated product.'}
+  ];
+  var timelineHtml = timeline.map(function(t){
+    return '<div class="tl-item"><div class="tl-date">'+t.date+'</div><div class="tl-dot-wrap"><div class="tl-dot"></div></div><div class="tl-body"><h4>'+t.title+'</h4><p>'+t.body+'</p></div></div>';
+  }).join('');
+
+  return ''+
+  '<h2 class="section-title">Overview</h2>'+
+  '<div class="stat-grid">'+
+    statCard(counts.prohibited,'Prohibited','var(--red)')+
+    statCard(highCount,'High-risk','var(--amber)')+
+    statCard(counts.limited,'Limited risk','var(--blue)')+
+    statCard(counts.minimal,'Minimal risk','var(--teal)')+
+    statCard(withControls,'AI Tools with Controls '+controlsPct+'%','var(--red)')+
+  '</div>'+
+  '<div class="two-col">'+
+    '<div class="panel"><h2 class="section-title">Regulatory timeline (reference)</h2><div class="timeline">'+timelineHtml+'</div>'+
+      '<div class="info-note" style="margin-top:16px;">ℹ Verify current status at the EU AI Act Service Desk before citing these dates to a client — the Digital Omnibus deferral was approved by Council on 29 June 2026; confirm formal Official Journal publication.</div>'+
+    '</div>'+
+    '<div class="panel"><h2 class="section-title">Needs attention</h2><div class="attn-list">'+attnHtml+'</div></div>'+
+  '</div>';
+}
+
+function statCard(n,label,color){
+  return '<div class="stat-card"><div class="stat-num" style="color:'+color+';">'+n+'</div><div class="stat-label">'+label+'</div></div>';
+}
+
+/* ---------------- Wiring ---------------- */
+
+function wireApp(){
+  document.querySelectorAll('.tab').forEach(function(el){
+    el.addEventListener('click', function(){ state.tab = el.getAttribute('data-tab'); state.openId=null; render(); });
+  });
+
+  var backBtn = document.getElementById('back-to-landing');
+  if(backBtn) backBtn.addEventListener('click', function(){ state.acknowledged = false; state.ackChecked = false; render(); });
+  var brandHome = document.getElementById('brand-home-link');
+  if(brandHome) brandHome.addEventListener('click', function(){ state.acknowledged = false; state.ackChecked = false; render(); });
+
+  var emptyAdd = document.getElementById('empty-add-btn');
+  if(emptyAdd) emptyAdd.addEventListener('click', function(){ state.tab='add'; render(); });
+  var regAdd = document.getElementById('reg-add-btn');
+  if(regAdd) regAdd.addEventListener('click', function(){ state.tab='add'; render(); });
+  var cancelAdd = document.getElementById('cancel-add');
+  if(cancelAdd) cancelAdd.addEventListener('click', function(){ state.tab='register'; render(); });
+
+  var exportBtn = document.getElementById('export-btn');
+  if(exportBtn) exportBtn.addEventListener('click', exportCSV);
+
+  document.querySelectorAll('tr.row').forEach(function(el){
+    el.addEventListener('click', function(){ state.openId = el.getAttribute('data-id'); render(); });
+  });
+  document.querySelectorAll('.attn-row').forEach(function(el){
+    el.addEventListener('click', function(){ state.openId = el.getAttribute('data-id'); render(); });
+  });
+
+  var overlay = document.getElementById('drawer-overlay');
+  if(overlay){
+    overlay.addEventListener('click', function(e){ if(e.target===overlay){ state.openId=null; render(); } });
+    var c1 = document.getElementById('close-drawer'); if(c1) c1.addEventListener('click', function(){ state.openId=null; render(); });
+    var c2 = document.getElementById('close-drawer-2'); if(c2) c2.addEventListener('click', function(){ state.openId=null; render(); });
+    var del = document.getElementById('delete-sys');
+    if(del) del.addEventListener('click', function(){
+      var id = del.getAttribute('data-id');
+      state.systems = state.systems.filter(function(s){return s.id!==id;});
+      persistSystems();
+      state.openId=null;
+      render();
+    });
+  }
+
+  var form = document.getElementById('system-form');
+  if(form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var fd = new FormData(form);
+      var prohibitedFlags = fd.getAll('prohibited');
+      var transparencyFlags = fd.getAll('transparency');
+      var sys = {
+        id: (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now())+Math.random(),
+        name: fd.get('name') || 'Untitled system',
+        owner: fd.get('owner') || '',
+        description: fd.get('description') || '',
+        role: fd.get('role') || 'Deployer',
+        marketExposure: fd.get('marketExposure') || 'no-eu',
+        sector: fd.get('sector') || 'other',
+        embeddedRegulated: fd.get('embeddedRegulated') === 'yes',
+        controlDesign: fd.get('controlDesign') || 'none',
+        prohibitedFlags: prohibitedFlags,
+        annexCategory: fd.get('annexCategory') || 'none',
+        transparencyFlags: transparencyFlags,
+        deployerType: fd.get('deployerType') || 'none',
+        createdAt: Date.now()
+      };
+      state.systems.push(sys);
+      persistSystems();
+      state.tab = 'register';
+      render();
+    });
+  }
+}
+
+function exportCSV(){
+  var header = ['Name','Owner','Role','Market exposure','Sector','Classification','Priority','Deadline','FRIA flag','Sector guidance flag'];
+  var rows = state.systems.map(function(s){
+    var c = classify(s);
+    return [s.name, s.owner, s.role, s.marketExposure, s.sector, c.meta.label, c.meta.priority, c.meta.deadline, c.friaFlag?'Yes':'No', c.sectorFlag?'Yes':'No'];
+  });
+  var csv = [header].concat(rows).map(function(r){
+    return r.map(function(cell){
+      var v = (cell==null?'':String(cell)).replace(/"/g,'""');
+      return '"'+v+'"';
+    }).join(',');
+  }).join('\n');
+  var blob = new Blob([csv], {type:'text/csv'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'ai-system-register.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+loadAll();
+})();
+</script>
+</body>
+</html>
+
