@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ControlMap Starter™ | Self-Serve AI Risk Register</title>
+  <meta name="description" content="The self-serve AI Risk Register for PH IT-BPM teams. Instant EU AI Act tier classification, priority deadlines, and control mapping. ₱3,000, delivered instantly.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230c6e54'/><path d='M10 17l4 4 8-9' stroke='white' stroke-width='3' fill='none' stroke-linecap='round'/></svg>">
+</head>
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header class="site-header">
+    <div class="wrap nav">
+      <a href="index.html" class="brand" aria-label="ControlMap home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        ControlMap<small>PH</small>
+      </a>
+      <nav aria-label="Main navigation">
+        <ul class="nav-links" id="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="#demo">Try the Engine</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <button class="btn btn-primary" data-order="ControlMap Starter™">Get It Now</button>
+        <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <nav class="wrap crumbs" aria-label="Breadcrumb">
+      <a href="index.html">Home</a><span aria-hidden="true">/</span>
+      <a href="shop.html">Shop</a><span aria-hidden="true">/</span>
+      ControlMap Starter™
+    </nav>
+
+    <!-- ================= PRODUCT HERO ================= -->
+    <section class="p-hero">
+      <div class="wrap p-hero-grid">
+        <div>
+          <span class="badge-found">Founding access pricing</span>
+          <h1>ControlMap Starter™</h1>
+          <p class="lede">See your AI risk picture in minutes. A working register you fill in yourself: enter each AI system, and it auto-classifies by EU AI Act risk tier, assigns a priority and reference deadline, and gives you clean fields to map existing controls.</p>
+          <div class="price-line">
+            <span class="price">₱3,000</span>
+            <span class="price-note">one-time, full payment upfront</span>
+          </div>
+          <div class="hero-ctas">
+            <button class="btn btn-primary" data-order="ControlMap Starter™">Get It Now</button>
+            <a href="#demo" class="btn btn-ghost">Try the Engine First</a>
+          </div>
+        </div>
+        <aside class="panel buy-card reveal" aria-label="Purchase summary">
+          <div class="price-line">
+            <span class="price" style="font-size:1.6rem;">₱3,000</span>
+            <span class="price-note">instant delivery</span>
+          </div>
+          <ul>
+            <li>AI System Register &amp; Risk Classifier file (Excel)</li>
+            <li>Works offline and in Google Sheets</li>
+            <li>Yours to keep and reuse, no subscription</li>
+            <li>Sent the moment payment is confirmed</li>
+            <li>Seven-day buyer protection</li>
+          </ul>
+          <button class="btn btn-primary" style="width:100%; justify-content:center;" data-order="ControlMap Starter™">Get Access Today</button>
+          <p class="buy-note">No calls, no intake. Reply, pay, receive the file.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ================= LIVE DEMO ================= -->
+    <section class="section section-mist" id="demo">
+      <div class="wrap spotlight">
+        <div class="reveal">
+          <h2 class="h2">Watch it classify, right here</h2>
+          <p class="lede" style="margin-top:12px;">This is the same classification logic built into the file. Pick a system type and see what comes back.</p>
+        </div>
+        <div class="demo-widget reveal">
+          <label for="demo-select">Pick an AI system from your org:</label>
+          <select class="demo-select" id="demo-select">
+            <option value="">Choose a system...</option>
+            <option value="resume" data-tier="High-Risk" data-chip="chip-high" data-priority="P1 - Immediate" data-deadline="Reference deadline: Aug 2026" data-desc="Employment screening affects people's livelihoods, so it lands in the high-risk tier under the EU AI Act's employment Annex.">Resume screening assistant</option>
+            <option value="chatbot" data-tier="Limited" data-chip="chip-limited" data-priority="P2 - This Quarter" data-deadline="Reference deadline: Aug 2026" data-desc="Chatbots that interact with customers carry transparency duties: users must know they are talking to a machine.">Customer service chatbot</option>
+            <option value="attendance" data-tier="High-Risk" data-chip="chip-high" data-priority="P1 - Immediate" data-deadline="Reference deadline: Aug 2026" data-desc="Biometric identification of employees is regulated sharply. Expect documentation duties and strict lawful-basis checks.">Biometric shift attendance</option>
+            <option value="grammar" data-tier="Minimal" data-chip="chip-minimal" data-priority="P3 - Monitor" data-deadline="Reference deadline: none triggered" data-desc="Assistive tools that suggest edits without making decisions about people sit in the minimal tier. Log them and move on.">Grammar checker add-on</option>
+            <option value="sentiment" data-tier="Prohibited" data-chip="chip-prohibited" data-priority="P0 - Stop Use" data-deadline="Reference deadline: immediate review" data-desc="Emotion inference in workplace settings is prohibited under the EU AI Act. The register flags this so you can escalate same-day.">Sentiment scoring on support calls</option>
+          </select>
+          <div class="demo-result" id="demo-result" role="status" aria-live="polite">
+            <div class="demo-result-head">
+              <strong data-system></strong>
+              <span class="chip chip-minimal"></span>
+            </div>
+            <p data-desc></p>
+            <div class="demo-meta">
+              <span>Priority: <b data-priority></b></span>
+              <span><b data-deadline></b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GOVERNANCE FACTS ================= -->
+    <section class="section">
+      <div class="wrap spotlight">
+        <div class="reveal">
+          <h2 class="h2">Governance facts</h2>
+          <p class="lede" style="margin-top:12px;">Everything in the box, stated plainly. If a number here changes after you buy, seven-day buyer protection has you covered.</p>
+        </div>
+        <div class="facts-panel reveal" aria-label="Governance facts panel">
+          <h3>Governance Facts</h3>
+          <p class="facts-sub">ControlMap Starter™ · per single-user license</p>
+          <div class="fact-big"><strong>4</strong> <span>risk tiers classified<br>(all EU AI Act tiers)</span></div>
+          <div class="fact-big"><strong>Instant</strong> <span>delivery on payment<br>confirmation</span></div>
+          <div class="fact-row"><span>Format</span> <span>Excel / Google Sheets</span></div>
+          <div class="fact-row"><span>Priorities assigned</span> <span>P0 through P3</span></div>
+          <div class="fact-row"><span>Reference deadline field</span> <span>Included</span></div>
+          <div class="fact-row"><span>Control mapping columns</span> <span>Included</span></div>
+          <div class="fact-row"><span>Register rows</span> <span>Unlimited</span></div>
+          <div class="fact-row"><span>Calls required</span> <span>Zero</span></div>
+          <div class="fact-row"><span>Buyer protection window</span> <span>7 days</span></div>
+          <p class="facts-foot">Not a forensic audit, legal opinion, or substitute for counsel. Founding price, not guaranteed permanent.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= WHAT'S INSIDE (modules) ================= -->
+    <section class="section section-mist">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <h2 class="h2">Four tabs, one honest picture</h2>
+        </div>
+        <div class="module-grid reveal">
+          <div class="module">
+            <span class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h10" stroke-linecap="round"/></svg></span>
+            <h3>Systems tab</h3>
+            <p>Name each tool, its owner, its purpose, and where it sits. Official or shadow IT, everything gets one row.</p>
+          </div>
+          <div class="module">
+            <span class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5" opacity=".5"/></svg></span>
+            <h3>Classifier tab</h3>
+            <p>The engine reads your entries and tags every system Prohibited, High-Risk, Limited, or Minimal automatically.</p>
+          </div>
+          <div class="module">
+            <span class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3" stroke-linecap="round"/></svg></span>
+            <h3>Priorities tab</h3>
+            <p>Each system carries a P0 to P3 priority plus a reference deadline, so the order of work is never ambiguous.</p>
+          </div>
+          <div class="module">
+            <span class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-5"/><rect x="4" y="4" width="16" height="16" rx="3"/></svg></span>
+            <h3>Coverage tab</h3>
+            <p>Record which of your existing controls already apply per system, and see plainly where the gaps sit.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= REVIEWS ================= -->
+    <section class="section" id="reviews">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <h2 class="h2">Buyer reviews</h2>
+        </div>
+        <div class="review-summary reveal">
+          <span class="review-score">4.8</span>
+          <div>
+            <span class="stars" aria-label="4.8 out of 5 stars">★★★★★</span>
+            <p>Based on 14 verified buyer reviews (sample reviews shown)</p>
+          </div>
+        </div>
+        <div class="reviews-grid reveal">
+          <article class="review-card">
+            <span class="stars" aria-label="5 out of 5 stars">★★★★★</span>
+            <blockquote>"Bought it at 9am, had our first real register by lunch. The auto-classification caught two tools I would have sworn were low risk."</blockquote>
+            <div class="quote-who">
+              <span class="avatar" style="background:#23568f;">AC</span>
+              <div>
+                <strong>Andrea Cruz</strong>
+                <span>GRC Analyst, Arkipelago Data (sample)</span>
+              </div>
+            </div>
+          </article>
+          <article class="review-card">
+            <span class="stars" aria-label="5 out of 5 stars">★★★★★</span>
+            <blockquote>"Finally something my team can use without waiting on legal. The priority column alone justified the price."</blockquote>
+            <div class="quote-who">
+              <span class="avatar" style="background:#0c6e54;">JL</span>
+              <div>
+                <strong>Jomar Lacsina</strong>
+                <span>Ops Risk Officer, Northgate Solutions (sample)</span>
+              </div>
+            </div>
+          </article>
+          <article class="review-card">
+            <span class="stars" aria-label="4 out of 5 stars">★★★★☆</span>
+            <blockquote>"Solid first pass. We upgraded to the Snapshot after filling it in, which is honestly the natural next step. Wish the coverage tab had more preset control names."</blockquote>
+            <div class="quote-who">
+              <span class="avatar" style="background:#a06a1c;">PS</span>
+              <div>
+                <strong>Pia Salcedo</strong>
+                <span>Data Protection Lead, Halcyon CX (sample)</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= RELATED + CTA ================= -->
+    <section class="section-tight">
+      <div class="wrap related reveal">
+        <a href="product-snapshot.html" class="other-side">
+          <div>
+            <h3>Want it done for you?</h3>
+            <p>The Diagnostic™ Snapshot is the guided version of this exact exercise.</p>
+          </div>
+          <span class="arrow-link">Compare →</span>
+        </a>
+        <a href="product-sentinel.html" class="other-side">
+          <div>
+            <h3>Already filled it in?</h3>
+            <p>Sentinel™ keeps the register current, quarter after quarter.</p>
+          </div>
+          <span class="arrow-link">Keep It Current →</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section-tight" style="padding-top:0;">
+      <div class="wrap">
+        <div class="cta-band reveal">
+          <div>
+            <h2>₱3,000 today, answers by tonight.</h2>
+            <p>Founding access pricing while the self-serve version is new.</p>
+          </div>
+          <button class="btn btn-primary" data-order="ControlMap Starter™">Get It Now</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div>
+        <a href="index.html" class="brand" aria-label="ControlMap home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          ControlMap<small>PH</small>
+        </a>
+        <p>Structured first looks at AI risk for Risk &amp; Compliance teams in Philippine IT-BPM, BPO, and shared-services companies.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="product-starter.html">ControlMap Starter™</a></li>
+          <li><a href="product-snapshot.html">Diagnostic™ Snapshot</a></li>
+          <li><a href="product-sentinel.html">Sentinel™ Review</a></li>
+          <li><a href="shop.html">All Products</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="wrap footer-base">
+      <span>© <span id="year">2026</span> ControlMap PH. First-look tools, not audits or legal advice.</span>
+      <span>Manila, Philippines</span>
+    </div>
+  </footer>
+
+  <!-- ================= ORDER MODAL ================= -->
+  <div class="modal-backdrop" id="order-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal">
+      <button class="modal-close" aria-label="Close dialog">✕</button>
+      <h3 id="modal-title">Getting <span id="modal-product-name"></span></h3>
+      <p>This demo site doesn't process payments. Here is exactly how ordering works on the real launch:</p>
+      <ol>
+        <li><b>Comment "ME"</b> on the launch post or message directly.</li>
+        <li><b>Reply "READY"</b> once you've reviewed the details.</li>
+        <li><b>Send ₱3,000</b> full payment upfront.</li>
+        <li><b>Receive the file instantly</b> once payment is confirmed.</li>
+      </ol>
+      <button class="btn btn-primary modal-done">Got It</button>
+      <p class="modal-fineprint">Covered by seven-day buyer protection: fix or replace first, refund only if delivery genuinely fails.</p>
+    </div>
+  </div>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>
